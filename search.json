@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Mike’s blog",
+    "section": "",
+    "text": "Neural networks from scratch\n\n\n\nneural networks\n\n\n\nBuilding a neural network from scratch in Python following Andrej Karpathy.\n\n\n\n\n\nMay 18, 2026\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "Mike",
@@ -7,10 +14,45 @@
     "text": "This is a place to share what I’m learning."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Mike’s blog",
+    "objectID": "posts/neural-net-scratch/index.html",
+    "href": "posts/neural-net-scratch/index.html",
+    "title": "Neural networks from scratch",
     "section": "",
-    "text": "Neural networks from scratch\n\n\n\nneural networks\n\n\n\nBuilding a neural network from scratch in Python following Andrej Karpathy.\n\n\n\n\n\nMay 18, 2026\n\n\n\n\n\nNo matching items"
+    "text": "I have been following along with Andrej Karpathy’s micrograd, a neural network built from scratch in Python with an accompanying video series. I recommend this very highly! My intention here is to complement that by going into more depth in places and exploring in interesting directions."
+  },
+  {
+    "objectID": "posts/neural-net-scratch/index.html#thank-you-andrej-karpathy",
+    "href": "posts/neural-net-scratch/index.html#thank-you-andrej-karpathy",
+    "title": "Neural networks from scratch",
+    "section": "",
+    "text": "I have been following along with Andrej Karpathy’s micrograd, a neural network built from scratch in Python with an accompanying video series. I recommend this very highly! My intention here is to complement that by going into more depth in places and exploring in interesting directions."
+  },
+  {
+    "objectID": "posts/neural-net-scratch/index.html#a-simpler-problem-xor",
+    "href": "posts/neural-net-scratch/index.html#a-simpler-problem-xor",
+    "title": "Neural networks from scratch",
+    "section": "A simpler problem: XOR",
+    "text": "A simpler problem: XOR\nKarpathy uses the moons dataset to demonstrate micrograd. I wanted to start with the simplest possible problem so that I could keep the network small and visualise everything about it. Exclusive OR (XOR) seemed to fit the bill: two binary input neurons, four possibilities (2^2) and it requires a hidden layer, unlike AND or OR. However even this turned out more complicated than I expected!\n\n\n\nInput 1\nInput 2\nOutput\n\n\n\n\n0\n0\n0\n\n\n0\n1\n1\n\n\n1\n0\n1\n\n\n1\n1\n0"
+  },
+  {
+    "objectID": "posts/neural-net-scratch/index.html#computation-graph",
+    "href": "posts/neural-net-scratch/index.html#computation-graph",
+    "title": "Neural networks from scratch",
+    "section": "Computation graph",
+    "text": "Computation graph\nThis shows the computation graph for the loss, accumulated across the four input cases. It surprised me how complicated this is! Backpropagation drills through this graph from right to left, calculating the gradient of the loss with respect to the node i.e. how much a given change in that parameter (say a neuron weight) affects the loss.\nKarpathy uses a clever trick in micrograd to reduce effort: derivatives are given for multiplication and addition, then recycled for subtraction by expressing it as a - b = a + (-b). But it does have the side-effect of cluttering this graph.\n\n\n\nAccumulated loss computation graph"
+  },
+  {
+    "objectID": "posts/neural-net-scratch/index.html#loss-vs-iterations",
+    "href": "posts/neural-net-scratch/index.html#loss-vs-iterations",
+    "title": "Neural networks from scratch",
+    "section": "Loss vs iterations",
+    "text": "Loss vs iterations\n\n\nCode\nimport pandas as pd\nimport plotly.express as px\n\ndf = pd.read_csv(\"results.csv\")\n\nfig = px.line(\n    df,\n    x='iteration',\n    y='loss',\n    color='repeat',\n    facet_col='hidden_neurons',\n    facet_row='learning_rate',\n    title='Loss vs Iterations'\n)\n\nfig.show()"
+  },
+  {
+    "objectID": "posts/neural-net-scratch/index.html#todo",
+    "href": "posts/neural-net-scratch/index.html#todo",
+    "title": "Neural networks from scratch",
+    "section": "Todo",
+    "text": "Todo\n\nDefine one neuron: inputs, outputs, activation function, weights, bias.\nCommentary on loss vs iterations.\nExplain why hidden layer needed: linearly separable.\nDiagram of neural network.\nFurther work."
   }
 ]
