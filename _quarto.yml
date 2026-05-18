@@ -3,7 +3,7 @@ project:
   output-dir: _site
 
 website:
-  title: "My Research Blog"
+  title: "Mike's blog"
   navbar:
     left:
       - href: index.qmd

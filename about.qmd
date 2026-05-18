@@ -1,0 +1,12 @@
+---
+title: "Mike"
+about:
+  template: trestles # Options: jolla, trestles, solana, marquee, broadside
+  # image: profile.jpg
+  links:
+    - icon: github
+      text: GitHub
+      href: https://github.com/MikeCullimore
+---
+
+This is a place to share what I'm learning.
