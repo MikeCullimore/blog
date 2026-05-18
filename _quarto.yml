@@ -12,7 +12,10 @@ website:
 
 format:
   html:
-    theme: cosmo          # clean default; alternatives: flatly, litera, solar
+    theme:
+      light: cosmo        # clean default; alternatives: flatly, litera, solar
+      dark: darkly
+    default-dark-mode: true
     highlight-style: github
     code-fold: true       # code blocks collapsed by default — reader can expand
     toc: true
