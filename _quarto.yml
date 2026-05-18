@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "My Research Blog"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Posts
+      - about.qmd
+
+format:
+  html:
+    theme: cosmo          # clean default; alternatives: flatly, litera, solar
+    highlight-style: github
+    code-fold: true       # code blocks collapsed by default — reader can expand
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    fig-responsive: true
+
+execute:
+  freeze: auto            # only re-execute cells when source changes
