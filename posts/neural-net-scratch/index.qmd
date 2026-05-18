@@ -1,6 +1,0 @@
----
-title: "Neural networks from scratch"
-date: 2026-05-18
-categories: [neural networks]
-description: "Building a neural network from scratch in Python following Andrej Karpathy."
----
