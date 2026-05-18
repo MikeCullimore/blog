@@ -13,9 +13,9 @@ website:
 format:
   html:
     theme:
-      light: cosmo        # clean default; alternatives: flatly, litera, solar
       dark: darkly
-    default-dark-mode: true
+      light: cosmo        # clean default; alternatives: flatly, litera, solar
+    respect-user-color-scheme: true
     highlight-style: github
     code-fold: true       # code blocks collapsed by default — reader can expand
     toc: true
