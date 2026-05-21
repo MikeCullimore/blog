@@ -65,11 +65,3 @@ fig.show()
 ```
 
 {{< include dashboard.qmd >}}
-
-## Todo
-
-- Define one neuron: inputs, outputs, activation function, weights, bias.
-- Commentary on loss vs iterations.
-- Explain why hidden layer needed: linearly separable.
-- Diagram of neural network.
-- Further work.

@@ -1,0 +1,21 @@
+# todo
+
+- Define one neuron: inputs, outputs, activation function, weights, bias. Labelled diagram.
+- Diagram of neural network: hidden layers, connections only between not within layers (restricted Boltzmann machine?).
+- Commentary on loss vs iterations.
+    - Repeats show that given configuration does not always converge, particularly 2 neurons low learning rate.
+    - 4 neurons enough to converge consistently.
+- Explain why hidden layer needed: linearly separable.
+    - Hidden neuron draws one straight line in its input space.
+    - Together the hidden layers change the geometry of the input space of downstream layers.
+- Plot output value vs inputs x1, x2: heatmap?
+- Make animated plots good enough to publish.
+- Explain symmetry e.g. order of hidden neurons shouldn't matter (swap any two including their weights at output layer, should be equivalent).
+- Further work.
+    - Explore higher learning rates.
+    - Adam optimiser
+        - Does it converge faster?
+        - Is it less sensitive to initial parameters?
+    - Find configuration which solves XOR consistently, fastest, with best runtime performance.
+    - Plot Pareto front. Iterations to convergence vs floating point operations?
+    - Extend from XOR to n-parity (1 if odd number of n inputs is 1, else 0).
