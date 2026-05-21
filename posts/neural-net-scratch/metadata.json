@@ -1,0 +1,164 @@
+[
+  {
+    "repeat":1,
+    "hidden_neurons":2,
+    "learning_rate":0.1,
+    "label":"Repeat 1 (2 neurons, lr=0.1)"
+  },
+  {
+    "repeat":2,
+    "hidden_neurons":2,
+    "learning_rate":0.1,
+    "label":"Repeat 2 (2 neurons, lr=0.1)"
+  },
+  {
+    "repeat":3,
+    "hidden_neurons":2,
+    "learning_rate":0.1,
+    "label":"Repeat 3 (2 neurons, lr=0.1)"
+  },
+  {
+    "repeat":1,
+    "hidden_neurons":4,
+    "learning_rate":0.1,
+    "label":"Repeat 1 (4 neurons, lr=0.1)"
+  },
+  {
+    "repeat":2,
+    "hidden_neurons":4,
+    "learning_rate":0.1,
+    "label":"Repeat 2 (4 neurons, lr=0.1)"
+  },
+  {
+    "repeat":3,
+    "hidden_neurons":4,
+    "learning_rate":0.1,
+    "label":"Repeat 3 (4 neurons, lr=0.1)"
+  },
+  {
+    "repeat":1,
+    "hidden_neurons":10,
+    "learning_rate":0.1,
+    "label":"Repeat 1 (10 neurons, lr=0.1)"
+  },
+  {
+    "repeat":2,
+    "hidden_neurons":10,
+    "learning_rate":0.1,
+    "label":"Repeat 2 (10 neurons, lr=0.1)"
+  },
+  {
+    "repeat":3,
+    "hidden_neurons":10,
+    "learning_rate":0.1,
+    "label":"Repeat 3 (10 neurons, lr=0.1)"
+  },
+  {
+    "repeat":1,
+    "hidden_neurons":2,
+    "learning_rate":0.2,
+    "label":"Repeat 1 (2 neurons, lr=0.2)"
+  },
+  {
+    "repeat":2,
+    "hidden_neurons":2,
+    "learning_rate":0.2,
+    "label":"Repeat 2 (2 neurons, lr=0.2)"
+  },
+  {
+    "repeat":3,
+    "hidden_neurons":2,
+    "learning_rate":0.2,
+    "label":"Repeat 3 (2 neurons, lr=0.2)"
+  },
+  {
+    "repeat":1,
+    "hidden_neurons":4,
+    "learning_rate":0.2,
+    "label":"Repeat 1 (4 neurons, lr=0.2)"
+  },
+  {
+    "repeat":2,
+    "hidden_neurons":4,
+    "learning_rate":0.2,
+    "label":"Repeat 2 (4 neurons, lr=0.2)"
+  },
+  {
+    "repeat":3,
+    "hidden_neurons":4,
+    "learning_rate":0.2,
+    "label":"Repeat 3 (4 neurons, lr=0.2)"
+  },
+  {
+    "repeat":1,
+    "hidden_neurons":10,
+    "learning_rate":0.2,
+    "label":"Repeat 1 (10 neurons, lr=0.2)"
+  },
+  {
+    "repeat":2,
+    "hidden_neurons":10,
+    "learning_rate":0.2,
+    "label":"Repeat 2 (10 neurons, lr=0.2)"
+  },
+  {
+    "repeat":3,
+    "hidden_neurons":10,
+    "learning_rate":0.2,
+    "label":"Repeat 3 (10 neurons, lr=0.2)"
+  },
+  {
+    "repeat":1,
+    "hidden_neurons":2,
+    "learning_rate":0.5,
+    "label":"Repeat 1 (2 neurons, lr=0.5)"
+  },
+  {
+    "repeat":2,
+    "hidden_neurons":2,
+    "learning_rate":0.5,
+    "label":"Repeat 2 (2 neurons, lr=0.5)"
+  },
+  {
+    "repeat":3,
+    "hidden_neurons":2,
+    "learning_rate":0.5,
+    "label":"Repeat 3 (2 neurons, lr=0.5)"
+  },
+  {
+    "repeat":1,
+    "hidden_neurons":4,
+    "learning_rate":0.5,
+    "label":"Repeat 1 (4 neurons, lr=0.5)"
+  },
+  {
+    "repeat":2,
+    "hidden_neurons":4,
+    "learning_rate":0.5,
+    "label":"Repeat 2 (4 neurons, lr=0.5)"
+  },
+  {
+    "repeat":3,
+    "hidden_neurons":4,
+    "learning_rate":0.5,
+    "label":"Repeat 3 (4 neurons, lr=0.5)"
+  },
+  {
+    "repeat":1,
+    "hidden_neurons":10,
+    "learning_rate":0.5,
+    "label":"Repeat 1 (10 neurons, lr=0.5)"
+  },
+  {
+    "repeat":2,
+    "hidden_neurons":10,
+    "learning_rate":0.5,
+    "label":"Repeat 2 (10 neurons, lr=0.5)"
+  },
+  {
+    "repeat":3,
+    "hidden_neurons":10,
+    "learning_rate":0.5,
+    "label":"Repeat 3 (10 neurons, lr=0.5)"
+  }
+]

@@ -64,6 +64,8 @@ fig = px.line(
 fig.show()
 ```
 
+{{< include dashboard.qmd >}}
+
 ## Todo
 
 - Define one neuron: inputs, outputs, activation function, weights, bias.

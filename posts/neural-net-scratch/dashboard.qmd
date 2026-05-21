@@ -1,0 +1,318 @@
+---
+title: "XOR Training Dashboard"
+format:
+  html:
+    echo: false
+    self-contained: true
+---
+
+```{ojs}
+// ── Load data ─────────────────────────────────────────────────────────────────
+data_raw = await FileAttachment("dashboard.csv").csv({ typed: true })
+metadata = await FileAttachment("metadata.json").json()
+
+// Derived constants
+all_iters  = [...new Set(data_raw.map(d => d.iteration))].sort((a,b) => a - b)
+n_iter     = all_iters.at(-1)
+run_labels = metadata.map(m => m.label)
+```
+
+```{ojs}
+// ── Run selector ──────────────────────────────────────────────────────────────
+viewof selected_labels = Inputs.checkbox(run_labels, {
+  label:  "Training runs (select up to 3)",
+  value:  [run_labels[0]]
+})
+
+// Clamp to 3 selections — warn if over
+{
+  if (selected_labels.length > 3) {
+    return html`<p style="color:#f0883e;font-family:monospace;font-size:12px">
+      ⚠ Maximum 3 runs — only the first 3 will be shown.
+    </p>`
+  }
+}
+
+// Effective selection: at most 3
+sel_labels = selected_labels.slice(0, 3)
+
+// Map labels back to repeat numbers for filtering
+sel_repeats = sel_labels.map(l => metadata.find(m => m.label === l).repeat)
+```
+
+```{ojs}
+// ── Playback controls ─────────────────────────────────────────────────────────
+viewof playing = Inputs.toggle({ label: "▶ Play", value: false })
+
+viewof speed = Inputs.range([1, 60], {
+  label: "Speed (iter/s)",
+  step:  1,
+  value: 20
+})
+
+viewof trail_len = Inputs.range([5, 200], {
+  label: "Trail length",
+  step:  5,
+  value: 50
+})
+
+viewof slider_iter = Inputs.range([0, n_iter], {
+  label: "Iteration",
+  step:  1,
+  value: 0
+})
+```
+
+```{ojs}
+// ── Animation clock ───────────────────────────────────────────────────────────
+clock = {
+  let iter  = slider_iter;
+  let last  = null;
+  let frame;
+
+  const ticker = (resolve) => {
+    const step = (ts) => {
+      if (!playing) { iter = slider_iter; last = null; resolve(iter); }
+      else {
+        if (last === null) last = ts;
+        const elapsed = ts - last;
+        const ms_per  = 1000 / speed;
+        if (elapsed >= ms_per) {
+          const steps = Math.floor(elapsed / ms_per);
+          iter  = (iter + steps) > n_iter ? 0 : iter + steps;
+          last  = ts;
+          resolve(iter);
+        }
+      }
+      frame = requestAnimationFrame(step);
+    };
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  };
+
+  return Generators.observe(ticker);
+}
+
+eff_iter = playing ? clock : slider_iter
+```
+
+```{ojs}
+// ── Colour palette — one colour per run slot ──────────────────────────────────
+COLOURS = ["#f0883e", "#58a6ff", "#3fb950"]
+
+// Filter data to selected repeats
+function run_data(repeat) {
+  return data_raw.filter(d => d.repeat === repeat)
+}
+
+// Trail: last trail_len iterations up to eff_iter for a given repeat
+function trail_data(repeat) {
+  return data_raw.filter(d =>
+    d.repeat   === repeat &&
+    d.iteration <= eff_iter &&
+    d.iteration >= eff_iter - trail_len
+  )
+}
+
+// Current point for a given repeat
+function current_point(repeat) {
+  // nearest iteration at or below eff_iter
+  const pts = data_raw
+    .filter(d => d.repeat === repeat && d.iteration <= eff_iter)
+    .sort((a,b) => b.iteration - a.iteration)
+  return pts[0] ?? null
+}
+```
+
+```{ojs}
+// ── Plot 1: Loss vs iteration ─────────────────────────────────────────────────
+loss_plot = {
+  const traces = sel_repeats.flatMap((rep, i) => {
+    const d    = run_data(rep)
+    const col  = COLOURS[i]
+    const name = sel_labels[i]
+
+    // Full loss line (dimmed)
+    const line = {
+      type: "scatter", mode: "lines",
+      x: d.map(r => r.iteration),
+      y: d.map(r => r.loss),
+      line: { color: col, width: 1.5 },
+      opacity: 0.35,
+      name,
+      showlegend: true,
+    }
+
+    // Highlighted portion up to eff_iter
+    const active = d.filter(r => r.iteration <= eff_iter)
+    const active_line = {
+      type: "scatter", mode: "lines",
+      x: active.map(r => r.iteration),
+      y: active.map(r => r.loss),
+      line: { color: col, width: 2 },
+      showlegend: false,
+      hoverinfo: "skip",
+    }
+
+    // Current point marker
+    const pt = current_point(rep)
+    const marker = pt ? {
+      type: "scatter", mode: "markers",
+      x: [pt.iteration], y: [pt.loss],
+      marker: { color: col, size: 8, line: { color: "#fff", width: 1.5 } },
+      showlegend: false,
+      hovertemplate: `iter %{x}<br>loss %{y:.4f}<extra>${name}</extra>`,
+    } : null
+
+    return marker ? [line, active_line, marker] : [line, active_line]
+  })
+
+  // Vertical rule at current iteration
+  const rule = {
+    type: "scatter", mode: "lines",
+    x: [eff_iter, eff_iter],
+    y: [0, Math.max(...data_raw.map(d => d.loss))],
+    line: { color: "#7d8590", width: 1, dash: "dot" },
+    showlegend: false, hoverinfo: "skip",
+  }
+
+  const layout = {
+    paper_bgcolor: "#0d1117",
+    plot_bgcolor:  "#161b22",
+    font:  { family: "JetBrains Mono, monospace", size: 11, color: "#e6edf3" },
+    title: { text: "Loss vs iteration", font: { size: 13 }, x: 0.04 },
+    xaxis: { title: "Iteration", gridcolor: "#30363d", zerolinecolor: "#30363d" },
+    yaxis: { title: "Loss",      gridcolor: "#30363d", zerolinecolor: "#30363d" },
+    legend: { bgcolor: "#0d1117", bordercolor: "#30363d", borderwidth: 1 },
+    margin: { t: 40, r: 20, b: 50, l: 60 },
+    height: 320,
+  }
+
+  return {traces: [...traces, rule], layout}
+}
+```
+
+```{ojs}
+// ── Plot 2: Parameter space (param_0 × param_1) ───────────────────────────────
+param_plot = {
+  const traces = sel_repeats.flatMap((rep, i) => {
+    const col  = COLOURS[i]
+    const name = sel_labels[i]
+    const trl  = trail_data(rep)
+    const pt   = current_point(rep)
+
+    // Trail line
+    const trail_line = {
+      type: "scatter", mode: "lines",
+      x: trl.map(r => r.param_0),
+      y: trl.map(r => r.param_1),
+      line: { color: col, width: 1.5 },
+      opacity: 0.45,
+      showlegend: false,
+      hoverinfo: "skip",
+    }
+
+    // Trail points coloured by loss
+    const trail_pts = {
+      type: "scatter", mode: "markers",
+      x: trl.map(r => r.param_0),
+      y: trl.map(r => r.param_1),
+      marker: {
+        color:     trl.map(r => r.loss),
+        colorscale: "YlOrRd",
+        reversescale: true,
+        size: 4,
+        opacity: 0.6,
+        showscale: i === 0,   // only show colorbar for first run
+        colorbar: i === 0 ? {
+          title: "Loss", thickness: 12, len: 0.6,
+          tickfont: { size: 10 },
+        } : undefined,
+      },
+      name,
+      showlegend: true,
+      hovertemplate: `param_0 %{x:.3f}<br>param_1 %{y:.3f}<br>loss %{marker.color:.4f}<extra>${name}</extra>`,
+    }
+
+    // Current point
+    const marker = pt ? {
+      type: "scatter", mode: "markers",
+      x: [pt.param_0], y: [pt.param_1],
+      marker: { color: col, size: 10, symbol: "circle",
+                line: { color: "#fff", width: 1.5 } },
+      showlegend: false,
+      hovertemplate: `iter ${eff_iter}<br>param_0 %{x:.3f}<br>param_1 %{y:.3f}<extra>${name}</extra>`,
+    } : null
+
+    return marker ? [trail_line, trail_pts, marker] : [trail_line, trail_pts]
+  })
+
+  // Axis ranges — fixed across all runs to keep stable
+  const all_p0   = data_raw.map(d => d.param_0)
+  const all_p1   = data_raw.map(d => d.param_1)
+  const pad      = 0.3
+  const p0_range = [Math.min(...all_p0) - pad, Math.max(...all_p0) + pad]
+  const p1_range = [Math.min(...all_p1) - pad, Math.max(...all_p1) + pad]
+
+  const layout = {
+    paper_bgcolor: "#0d1117",
+    plot_bgcolor:  "#161b22",
+    font:  { family: "JetBrains Mono, monospace", size: 11, color: "#e6edf3" },
+    title: { text: "Parameter space — w₁ × w₂ (neuron 1)", font: { size: 13 }, x: 0.04 },
+    xaxis: { title: "param_0  (w₁)", gridcolor: "#30363d",
+             zerolinecolor: "#30363d", range: p0_range },
+    yaxis: { title: "param_1  (w₂)", gridcolor: "#30363d",
+             zerolinecolor: "#30363d", range: p1_range, scaleanchor: "x" },
+    legend: { bgcolor: "#0d1117", bordercolor: "#30363d", borderwidth: 1 },
+    margin: { t: 40, r: 60, b: 50, l: 60 },
+    height: 420,
+  }
+
+  return { traces, layout }
+}
+```
+
+```{ojs}
+// ── Render ────────────────────────────────────────────────────────────────────
+// Plotly is loaded via CDN in the body below.
+// Each plot is rendered into a div via the invalidation-safe pattern.
+
+Plot1 = {
+  const div = document.createElement("div")
+  Plotly.newPlot(div, loss_plot.traces, loss_plot.layout,
+    { responsive: true, displayModeBar: false })
+  return div
+}
+
+Plot2 = {
+  const div = document.createElement("div")
+  Plotly.newPlot(div, param_plot.traces, param_plot.layout,
+    { responsive: true, displayModeBar: false })
+  return div
+}
+```
+
+```{ojs}
+// ── Status bar ────────────────────────────────────────────────────────────────
+html`<div style="
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #7d8590;
+  margin: 8px 0 16px;
+  display: flex;
+  gap: 32px;
+">
+  <span>iteration <strong style="color:#e6edf3">${eff_iter}</strong> / ${n_iter}</span>
+  ${sel_repeats.map((rep, i) => {
+    const pt = current_point(rep)
+    return pt
+      ? html`<span style="color:${COLOURS[i]}">${sel_labels[i].split(" (")[0]}
+               — loss <strong>${pt.loss.toFixed(4)}</strong></span>`
+      : ""
+  })}
+</div>`
+```
+
+```{=html}
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+```
